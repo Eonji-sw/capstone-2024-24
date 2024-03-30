@@ -2,6 +2,8 @@ package com.kotlin.kiumee.presentation.menu
 
 import android.content.Intent
 import android.view.View
+import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.kotlin.kiumee.R
@@ -17,18 +19,33 @@ import com.kotlin.kiumee.presentation.menu.menuviewpager.MenuViewPagerAdapter
 import com.kotlin.kiumee.presentation.menu.tab.TabAdapter
 import com.kotlin.kiumee.presentation.menu.tab.TabItemDecorator
 import com.kotlin.kiumee.presentation.orderfinish.OrderFinishActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MenuActivity : BindingActivity<ActivityMenuBinding>(R.layout.activity_menu) {
-    private val smoothScroller: RecyclerView.SmoothScroller by lazy {
+    private val smoothScroller1: RecyclerView.SmoothScroller by lazy {
         object : LinearSmoothScroller(this) {
             override fun getVerticalSnapPreference() = SNAP_TO_START
         }
     }
+    private val smoothScroller2: RecyclerView.SmoothScroller by lazy {
+        object : LinearSmoothScroller(this) {
+            override fun getVerticalSnapPreference() = SNAP_TO_START
+        }
+    }
+    private val smoothScroller3: RecyclerView.SmoothScroller by lazy {
+        object : LinearSmoothScroller(this) {
+            override fun getVerticalSnapPreference() = SNAP_TO_START
+        }
+    }
+
     private val cartList = mutableListOf<Cart>()
+    private val chatList = mutableListOf(Chat(1, "키우미에게 대화를 시작해주세요!"))
     var clicked = false
 
     override fun initView() {
         initChatAdapter()
+        addChatItem()
         initLayoutState()
         initTabAdapter()
 
@@ -71,7 +88,7 @@ class MenuActivity : BindingActivity<ActivityMenuBinding>(R.layout.activity_menu
     private fun initMoveRvBtnClickListener() {
         binding.btnMenuRvChat.setOnClickListener {
             binding.rvMenuRvChat?.layoutManager?.startSmoothScroll(
-                smoothScroller.apply {
+                smoothScroller1.apply {
                     targetPosition = 2
                 }
             )
@@ -123,17 +140,16 @@ class MenuActivity : BindingActivity<ActivityMenuBinding>(R.layout.activity_menu
         }
 
         if (binding.rvMenuCart.itemDecorationCount == 0) {
-            binding.rvMenuCart.addItemDecoration(
-                CartItemDecorator(this)
-            )
+            binding.rvMenuCart.addItemDecoration(CartItemDecorator(this))
         }
 
         initCartScrollPointer()
+        initChatScrollPointer()
     }
 
     private fun initCartScrollPointer() {
         binding.rvMenuCart?.layoutManager?.startSmoothScroll(
-            smoothScroller.apply {
+            smoothScroller2.apply {
                 targetPosition = cartList.size - 1
             }
         )
@@ -145,20 +161,130 @@ class MenuActivity : BindingActivity<ActivityMenuBinding>(R.layout.activity_menu
         binding.tvMenuCartTotalPrice.text = totalPrice.toString() + "원"
     }
 
-    private fun initChatAdapter() {
-        binding.rvMenuRvChat.adapter = ChatAdapter().apply {
-            submitList(
-                listOf(
-                    Chat(1, "키우미에게 대화를 시작해주세요!"),
-                    Chat(0, "안녕."),
-                    Chat(1, "안녕하세요!"),
-                    Chat(0, "나는 배가 고파."),
-                    Chat(0, "여기에서 가장 잘 나가는 메뉴가 뭐야?"),
-                    Chat(1, "저희 매장에서 제일 잘 나가는 메뉴는 아이스 아메리카노입니다.")
+    // 더미 데이터를 위한 함수. 추후 제거해야 함
+    private fun addChatItem() {
+        lifecycleScope.launch {
+            delay(5000)
+            chatList.add(Chat(0, "여기 추천 메뉴가 뭐야?"))
+            initChatAdapter()
+
+            delay(1000)
+            chatList.add(
+                Chat(
+                    1,
+                    "저희 식당의 추천 메뉴는 대창 큐브 스테이크 덮밥입니다."
                 )
             )
+            initChatAdapter()
+            binding.rvMenuTabContent?.layoutManager?.startSmoothScroll(
+                smoothScroller3.apply {
+                    targetPosition = 2
+                }
+            )
+            binding.rvMenuTabContent[2].performClick()
+            delay(6000)
+            chatList.add(
+                Chat(
+                    1,
+                    "대창 큐브 스테이크 덮밥은 우리가게 대표 메뉴로 13000원에 판매되고 있습니다."
+                )
+            )
+            initChatAdapter()
+
+            delay(10000)
+            chatList.add(Chat(0, "나는 버블티가 먹고싶어."))
+            initChatAdapter()
+
+            delay(1000)
+            chatList.add(Chat(1, "죄송합니다. 저희 식당에서는 버블티를 판매하고 있지 않습니다."))
+            initChatAdapter()
+            delay(6000)
+            chatList.add(Chat(1, "대신 복숭아 에이드를 추천드립니다."))
+            initChatAdapter()
+            binding.rvMenuTabContent?.layoutManager?.startSmoothScroll(
+                smoothScroller3.apply {
+                    targetPosition = 4
+                }
+            )
+            binding.rvMenuTabContent[4].performClick()
+
+            delay(7000)
+            chatList.add(Chat(0, "복숭아 에이드 먹을래."))
+            initChatAdapter()
+
+            delay(1000)
+            chatList.add(Chat(1, "복숭아 에이드 1잔을 장바구니에 담겠습니다."))
+            initChatAdapter()
+            addCartItem(Cart("복숭아 에이드", 1, 7000))
+
+            delay(7000)
+            chatList.add(Chat(0, "떡볶이 어디있어?"))
+            initChatAdapter()
+
+            delay(1000)
+            chatList.add(
+                Chat(
+                    1,
+                    "미도인에서는 Side 메뉴로 '미도인 곱창 떡볶이'와 '미도인 우실장 떡볶이'를 판매하고 있습니다."
+                )
+            )
+            initChatAdapter()
+            binding.rvMenuTabContent?.layoutManager?.startSmoothScroll(
+                smoothScroller3.apply {
+                    targetPosition = 3
+                }
+            )
+            binding.rvMenuTabContent[3].performClick()
+            delay(7000)
+            chatList.add(
+                Chat(
+                    1,
+                    "어떤 메뉴를 장바구니에 담아드릴까요?"
+                )
+            )
+            initChatAdapter()
+
+            delay(8000)
+            chatList.add(Chat(0, "결제해줘."))
+            initChatAdapter()
+
+            delay(1000)
+            chatList.add(
+                Chat(
+                    1,
+                    "복숭아 에이드 1개와 미도인 곱창 떡볶이 1개를 주문하셨습니다."
+                )
+            )
+            initChatAdapter()
+            delay(6000)
+            chatList.add(
+                Chat(
+                    1,
+                    "총 결제 금액은 16,500원입니다. 결제를 진행하겠습니다."
+                )
+            )
+            initChatAdapter()
+            delay(6000)
+            startActivity(Intent(this@MenuActivity, OrderFinishActivity::class.java))
+        }
+    }
+
+    private fun initChatAdapter() {
+        binding.rvMenuRvChat.adapter = ChatAdapter().apply {
+            submitList(chatList)
         }
 
-        binding.rvMenuRvChat.addItemDecoration(ChatItemDecorator(this))
+        if (binding.rvMenuRvChat.itemDecorationCount == 0) {
+            binding.rvMenuRvChat.addItemDecoration(ChatItemDecorator(this))
+        }
+        initChatScrollPointer()
+    }
+
+    private fun initChatScrollPointer() {
+        binding.rvMenuRvChat?.layoutManager?.startSmoothScroll(
+            smoothScroller1.apply {
+                targetPosition = chatList.size - 1
+            }
+        )
     }
 }
