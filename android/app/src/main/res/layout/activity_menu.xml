@@ -28,7 +28,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_menu_tab"
-            android:layout_width="280dp"
+            android:layout_width="260dp"
             android:layout_height="0dp"
             android:paddingHorizontal="30dp"
             android:paddingVertical="26dp"
@@ -113,7 +113,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_menu_cart"
-            android:layout_width="340dp"
+            android:layout_width="310dp"
             android:layout_height="match_parent"
             android:background="@color/gray_1"
             android:paddingHorizontal="30dp"
@@ -151,6 +151,7 @@
                 android:text="@string/menu_cart_select"
                 android:textAppearance="@style/TextAppearance.Kiumee.body4_regular_44"
                 android:textColor="@color/gray_10"
+                android:textSize="30sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/view_menu_cart_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -191,6 +192,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/menu_cart_total"
                 android:textAppearance="@style/TextAppearance.Kiumee.body4_regular_44"
+                android:textSize="30sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/btn_menu_cart_order"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -202,6 +204,7 @@
                 android:layout_marginEnd="3dp"
                 android:textAppearance="@style/TextAppearance.Kiumee.body3_medium_44"
                 android:textColor="@color/point"
+                android:textSize="30sp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_menu_cart_total"
