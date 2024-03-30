@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.Kiumee.body2_regular_48"
+            android:textSize="32sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="안녕" />
